@@ -24,7 +24,13 @@ R_DIR="$OUT/com/townsendprecision/jcloisterzoneandroid"
 SRC_FILES=$(find "$APP/src/main/java" "$R_DIR" -name '*.java' -print | tr '\n' ' ')
 javac -encoding UTF-8 -source 8 -target 8 -bootclasspath "$ANDROID_JAR" -d "$OUT/classes" $SRC_FILES
 "$D8" --min-api 23 --lib "$ANDROID_JAR" --output "$OUT/dex" $(find "$OUT/classes" -name '*.class' -print)
-(cd "$OUT/dex" && zip -qr "$OUT/unsigned.apk" classes.dex)
+JAR_TOOL="$(command -v jar || true)"
+if [ -z "$JAR_TOOL" ] && [ -n "${JAVA_HOME:-}" ]; then
+  JAR_TOOL="$JAVA_HOME/bin/jar"
+  [ -x "$JAR_TOOL.exe" ] && JAR_TOOL="$JAR_TOOL.exe"
+fi
+if [ -z "$JAR_TOOL" ]; then echo "jar tool not found" >&2; exit 1; fi
+(cd "$OUT/dex" && "$JAR_TOOL" uf "$OUT/unsigned.apk" classes.dex)
 KEYTOOL="$(command -v keytool || true)"
 if [ -z "$KEYTOOL" ]; then
   for candidate in "/c/Program Files/Common Files/Oracle/Java/javapath/keytool.exe" /c/Program\ Files/Java/*/bin/keytool.exe /c/Program\ Files/Eclipse\ Adoptium/*/bin/keytool.exe; do
