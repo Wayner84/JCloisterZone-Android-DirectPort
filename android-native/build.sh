@@ -29,6 +29,11 @@ if [ -z "$JAR_TOOL" ] && [ -n "${JAVA_HOME:-}" ]; then
   JAR_TOOL="$JAVA_HOME/bin/jar"
   [ -x "$JAR_TOOL.exe" ] && JAR_TOOL="$JAR_TOOL.exe"
 fi
+if [ -z "$JAR_TOOL" ]; then
+  for candidate in "/c/Program Files/Common Files/Oracle/Java/javapath/jar.exe" /c/Program\ Files/Java/*/bin/jar.exe /c/Program\ Files/Eclipse\ Adoptium/*/bin/jar.exe; do
+    if [ -f "$candidate" ]; then JAR_TOOL="$candidate"; break; fi
+  done
+fi
 if [ -z "$JAR_TOOL" ]; then echo "jar tool not found" >&2; exit 1; fi
 (cd "$OUT/dex" && "$JAR_TOOL" uf "$OUT/unsigned.apk" classes.dex)
 KEYTOOL="$(command -v keytool || true)"
