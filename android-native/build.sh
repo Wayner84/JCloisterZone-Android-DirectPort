@@ -3,6 +3,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="$ROOT/android-native"
 SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/c/Users/wayne/AppData/Local/Android/Sdk}}"
+if command -v cygpath >/dev/null 2>&1; then
+  SDK="$(cygpath -u "$SDK" 2>/dev/null || printf '%s' "$SDK")"
+fi
 if [ ! -d "$SDK" ]; then echo "Android SDK not found. Set ANDROID_HOME or ANDROID_SDK_ROOT." >&2; exit 1; fi
 PLATFORM="$(ls -d "$SDK"/platforms/android-* | sort -V | tail -1)"
 BUILD_TOOLS="$(ls -d "$SDK"/build-tools/* | sort -V | tail -1)"
