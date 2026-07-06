@@ -1,0 +1,17 @@
+/reference/
+.gradle/
+build/
+**/build/
+local.properties
+*.apk
+*.ap_
+*.dex
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# signing/build local only
+android-native/debug.keystore
+android-native/dist/

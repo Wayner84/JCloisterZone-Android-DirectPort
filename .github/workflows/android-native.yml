@@ -1,0 +1,28 @@
+name: Android Native Debug APK
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        shell: bash
+        run: sdkmanager "platforms;android-36" "build-tools;35.0.0" "platform-tools"
+      - name: Build debug APK
+        shell: bash
+        run: ./android-native/build.sh
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JCloisterZone-Android-debug-apk
+          path: android-native/dist/JCloisterZone-Android-v0.1.0-debug.apk
