@@ -20,7 +20,7 @@ jobs:
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager.bat"
           if [ ! -f "$SDKMANAGER" ]; then SDKMANAGER="$ANDROID_HOME/tools/bin/sdkmanager.bat"; fi
-          yes | "$SDKMANAGER" "platforms;android-36" "build-tools;35.0.0" "platform-tools"
+          "$SDKMANAGER" "platforms;android-36" "build-tools;35.0.0" "platform-tools"
       - name: Build debug APK
         shell: bash
         run: ./android-native/build.sh
